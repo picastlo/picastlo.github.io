@@ -1,0 +1,294 @@
+/* General container styling */
+.image-transformer {
+    position: fixed;
+    width: 100vw;
+    left:0px;
+    top:0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    font-family: 'Arial', sans-serif;
+    overflow:hidden;
+  }
+  
+/* Styling for the header */
+.image-transformer h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Flex row for images and sliders */
+.image-cell {
+
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.image-cell img {
+  position: relative;
+  top: 50px;
+  max-height: calc(70vh - 50px);
+
+}
+
+.editor {
+  position: fixed;
+  top: 50px; /*must match {.image-cell img} top*/
+  left: 0px /*must match {.image-cell} left*/
+}
+
+.editor canvas {
+  touch-action: pinch-zoom;
+  position: relative;
+}
+
+.editor-settings {
+  margin-left: 10px
+}
+
+.editor .toolbar {
+  display: flex;
+  color:#f0f0f0;
+  width: 100%;
+}
+
+.editor .toolbar .toolopt {
+  position: relative;
+  width: 40%;
+  left: 10px;
+}
+
+.brush-opts {
+  display:  grid;
+  grid-template-columns:  1fr 1fr;
+  grid-gap: 20px;
+}
+
+.editor .toolbar button {
+  width: 20%;
+  background-color: #777777;
+  color: #f0f0f0;
+  border-radius: 12px;
+}
+
+.editor-opacity {
+  display:  flex;
+}
+
+.image-container .toolbox {
+  position: fixed;
+  height: 100%;
+  right: 0px;
+  align-content: center;
+}
+
+.image-container .toolbox .transformations {
+    height: 85%;
+    right: 0px;
+    overflow-y: auto;
+}
+
+
+/* Image container with sliders */
+.image-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-width: 100%;
+  padding: 20px;
+}
+
+.image-view {
+  flex-grow:4
+}
+
+.toolbox-container {
+  flex-grow:1;
+  padding:20px;
+  background-color: #222;
+  width:320px;
+}
+
+.custom-hr {
+  border-top: solid 1px white;
+  display:inline;
+  width:200px;
+}
+
+.select-box {
+
+}
+
+.select-box-selected {
+  outline: solid 2px #777;
+}
+.transform-card {
+}
+
+.widget-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.widget-card:hover {
+  background-color: #777;
+}
+
+  /* Styling for the file input */
+  .image-transformer input[type="file"] {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #777;
+    background-color: #555;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .image-transformer input[type="file"]:hover {
+    background-color: #666;
+    border-color: #888;
+  }
+  
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  /* White text color */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 10px;
+  /* Space between buttons */
+}
+
+/* Light Gray Button */
+.button-light {
+  background-color: #d3d3d3;
+  /* Light gray */
+}
+
+.button-light:hover {
+  background-color: #c0c0c0;
+  /* Darker gray on hover */
+}
+
+/* Medium Gray Button */
+.button-medium {
+  background-color: #a9a9a9;
+  /* Dark gray */
+}
+
+.button-medium:hover {
+  background-color: #808080;
+  /* Darker gray on hover */
+}
+
+/* Dark Gray Button */
+.button-dark {
+  background-color: #696969;
+  /* Dim gray */
+}
+
+.button-dark:hover {
+  background-color: #505050;
+  /* Darker gray on hover */
+}
+
+
+
+
+/* Slider controls for each image */
+.slider-controls {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+/* Slider styles */
+.slider-controls label {
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.slider {
+  width: 80%;
+  margin-bottom: 20px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #333;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+
+  
+  /* Uploaded image styling */
+  .uploaded-image, .transformed-image {
+    max-width: 100%;
+    border: 1px solid #555;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Convert button styling */
+  .convert-button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #555;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+  }
+  
+  .convert-button:hover {
+    background-color: #333;
+    border-color: #777;
+    color: #f0f0f0;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .image-transformer h1 {
+      font-size: 1.8rem;
+    }
+  
+    .convert-button {
+      font-size: 0.9rem;
+      padding: 10px 20px;
+    }
+  }
+
