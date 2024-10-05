@@ -30,6 +30,7 @@ const App: React.FC = () => {
   const imgRef = useRef(null as unknown as HTMLImageElement)
   const cellRef = useRef(null as unknown as HTMLDivElement)
   const toolbarRef = useRef(null as unknown as HTMLDivElement)
+  const licRef = useRef(null as unknown as HTMLDivElement)
 
   const imageCanvas = image && <> 
       <img ref={imgRef} src={image} alt="Uploaded" className="uploaded-image" />
@@ -38,6 +39,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     cellRef.current.style.width = `calc(100vw - ${toolbarRef.current.clientWidth}px)`
+    licRef.current.style.width = `${toolbarRef.current.clientWidth-20}px`
   }, [])
 
   useEffect(() => {
@@ -58,6 +60,9 @@ const App: React.FC = () => {
           <h1 >PicaSTLo</h1>
           <div className='transformations'>
               <ToolBox imgRef={imgRef} pipeline={pipeline} image={image} setImage={setImage} addTransform={addTransform} removeTransform={removeTransform} selected={selected} setSelected={setSelected}/>
+              <div ref={licRef} className='license'>
+                <a href='https://picastlo.github.io/'>Picastlo</a> © 2024 by <a href='https://github.com/picastlo/'>Christophe Scholliers, João Costa Seco, Eduardo Geraldo</a> is licensed under <a href='https://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1'>CC BY-SA 4.0</a>
+              </div>
           </div>
         </div>
       </div>
