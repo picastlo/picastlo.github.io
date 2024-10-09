@@ -4,6 +4,7 @@
 import skmeans from "skmeans";
 import Delaunator from "delaunator";
 import { Transformation } from './Transformation';
+import { createCanvasElement } from "three";
 const imagejs = require('image-js');
 const ImageJS = imagejs.Image
 
@@ -61,7 +62,11 @@ export class PicastLoImage {
     }
 
     copyRawData(): ImageData {
-        const newData = new ImageData(this.imageData.width, this.imageData.height, { colorSpace: this.imageData.colorSpace });
+        const ctx = createCanvasElement().getContext('2d');
+        if(!ctx)
+            throw Error()
+        const newData = ctx.createImageData(this.imageData.width, this.imageData.height, { colorSpace: this.imageData.colorSpace });
+        
         for (let i = 0; i < this.imageData.data.length; i++) {
             newData.data[i] = this.imageData.data[i];
         }
