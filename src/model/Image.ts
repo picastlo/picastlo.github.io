@@ -19,6 +19,10 @@ export class PicastLoImage {
         }
     }
 
+    getImageData(): ImageData {
+        return this.imageData;
+    }
+
     loadFrom(img: HTMLImageElement) {
         const canvas = document.createElement('canvas');
         canvas.width = img.width;

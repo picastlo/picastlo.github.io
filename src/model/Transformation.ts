@@ -1,9 +1,6 @@
 import { PicastLoImage } from './Image';
 import skmeans from "skmeans";
 import Delaunator from "delaunator";
-import { PipelineSource } from 'stream';
-import { Dispatch, SetStateAction } from 'react';
-import { TrackballControls } from '@react-three/drei';
 
 const imagejs = require('image-js');
 const ImageJS = imagejs.Image
@@ -59,6 +56,12 @@ export class TransformationPipeline {
     setInitialImage(input: PicastLoImage) {
         this.input = input
     }
+    
+    setTransformations(transformationsString: string) {
+        const transformationsArray = convertJsonStringToArray(transformationsString) ?? [];    
+        const transformations: Transformation[] = transformationsArray.map(obj => JSONtoTransformation(obj));
+        this.transformations = transformations
+    }
 
     // pre:
     performTransformations(index: number, callback_step: (i: number) => void) {
@@ -78,6 +81,14 @@ export class TransformationPipeline {
 
     map = <t>(f: (value: Transformation, index: number) => t) => this.transformations.map<t>(f)
 }
+const convertJsonStringToArray = (jsonString: string): Transformation[] | null => {
+    try {
+        return JSON.parse(jsonString) as Transformation[];
+    } catch (error) {
+        console.error("Error parsing JSON:", error);
+        return null;
+    }
+};
 
 
 export class Renderer {
@@ -289,7 +300,7 @@ export class ColorOption extends Option<[number, number, number]> {
 
 export class ImageOption extends Option<ImageData> {
 
-    constructor(name:string, canvas:ImageData) {
+    constructor(name: string, canvas: ImageData) {
         super(name, canvas)
     }
 
@@ -297,18 +308,41 @@ export class ImageOption extends Option<ImageData> {
         return true
     }
 
-    override accept<R>(visitor: OptionVisitor<R>, extra:any): R {
+    override accept<R>(visitor: OptionVisitor<R>, extra: any): R {
         return visitor.visitImageOption(this, extra)
     }
+}
+
+function JSONtoOption(obj: any): any {
+    const name = obj["name"]
+    const keys = Object.keys(obj);
+    const secondKey = keys[1];
+    const kind = obj[secondKey]
+
+    var o = null
+    if (typeof kind === 'number') {
+        const value = obj["value"];
+        const min = obj["min"];
+        const max = obj["max"];
+        o = Object.assign(new ValueOption(name, value, min, max), obj);
+    } else if (Array.isArray(kind)) {
+        const color = obj["color"];
+        o = Object.assign(new ColorOption(name, color), obj);
+    } else if (typeof kind === 'object' && kind !== null) {
+        console.log("This is an object.");
+    } else {
+        console.log("This is of an unknown type.");
+    }
+    return o;
 }
 
 
 export interface OptionVisitor<R> {
     visitValueOption(option: ValueOption, extra: any): R
 
-    visitColorOption(option:ColorOption, extra:any): R
+    visitColorOption(option: ColorOption, extra: any): R
 
-    visitImageOption(option:ImageOption, extra:any): R
+    visitImageOption(option: ImageOption, extra: any): R
 }
 
 
@@ -421,7 +455,7 @@ export class Convolution extends ImageLibTransformation {
 
     transformImage(input: any) {
         let result = input;
-        for(let i = 0; i < this.getOption(0).getValue(); ++i)
+        for (let i = 0; i < this.getOption(0).getValue(); ++i)
             result = result.convolution(this.kernel);
         return result;
     }
@@ -565,7 +599,7 @@ function isWithinBounds(src: number, test: number, slack: number): boolean {
 
 }
 
-function isSimilar(src:number[], tst:number[], slack:number): boolean {
+function isSimilar(src: number[], tst: number[], slack: number): boolean {
     // TODO use the sum of the differences / difference between component sum?
     return isWithinBounds(src[0], tst[0], slack) && isWithinBounds(src[1], tst[1], slack) && isWithinBounds(src[2], tst[2], slack)
 }
@@ -575,8 +609,8 @@ export class TexturizeTransformation extends ImageLibTransformation {
 
     private stencil: any | null = null;
 
-    constructor(textureFile: string) {
-        super('Texturize', [
+    constructor(textureFile: string, textureName: string) {
+        super(`Texturize(${textureName})`, [
             new ColorOption('color', [127, 127, 127]),
             new ValueOption('margin', 0, 0, 255),
             new ValueOption('scale', 1, 1, 20),
@@ -673,41 +707,112 @@ let i = 0
 
 export class PaintTransformation extends ImageLibTransformation {
 
-    constructor(width:number, height:number) {
-        super('Paint' ,[new ImageOption('Mask', new ImageData(width, height))], true);
+    constructor(width: number, height: number) {
+        super('Paint', [new ImageOption('Mask', new ImageData(width, height))], true);
     }
 
     transformImage(input: any) {
         let w = input.width
         let h = input.height
-        
+
         let m_data = (<ImageOption>this.getOption(0)).getValue().data
-        
-        for(let x = 0; x < w; ++x) {
-            for(let y = 0; y < h; ++y) {
-                const m_data_ptr = (y * w + x )* 4
+
+        for (let x = 0; x < w; ++x) {
+            for (let y = 0; y < h; ++y) {
+                const m_data_ptr = (y * w + x) * 4
                 const alpha = m_data[m_data_ptr + 3]
-                
-                if(alpha <= 0)
+
+                if (alpha <= 0)
                     continue
-            
-                const m_frac = alpha/255
+
+                const m_frac = alpha / 255
                 const i_frac = 1 - m_frac
                 let pp = input.getPixelXY(x, y)
-    
+
                 let color = [
-                    pp[0]*i_frac + m_data[m_data_ptr]*m_frac,
-                    pp[1]*i_frac + m_data[m_data_ptr + 1]*m_frac,
-                    pp[2]*i_frac + m_data[m_data_ptr + 2]*m_frac
+                    pp[0] * i_frac + m_data[m_data_ptr] * m_frac,
+                    pp[1] * i_frac + m_data[m_data_ptr + 1] * m_frac,
+                    pp[2] * i_frac + m_data[m_data_ptr + 2] * m_frac
                 ]
 
                 if (input.alpha)
                     color.push(255)
 
                 input.setPixelXY(x, y, color)
-            }   
+            }
         }
 
         return input
     }
+}
+
+function JSONtoTransformation(obj: any): Transformation {
+    const name = obj["name"]
+    const sharpening_kernel = [
+        [0, -1, 0],
+        [-1, 5, -1],
+        [0, -1, 0],
+    ];
+
+    const smooth_kernel = [
+        [1 / 9, 1 / 9, 1 / 9],
+        [1 / 9, 1 / 9, 1 / 9],
+        [1 / 9, 1 / 9, 1 / 9]
+    ];
+
+    var o = null
+    switch (name) {
+        case 'Convolution(sharpen)':
+            o = Object.assign(new Convolution(sharpening_kernel, "sharpen"), obj);
+            break;
+        case 'Convolution(smooth)':
+            o = Object.assign(new Convolution(smooth_kernel, "smooth"), obj);
+            break;
+        case 'Gray Scale':
+            o = Object.assign(new GrayScale(), obj);
+            break;
+        case 'Quantize':
+            o = Object.assign(new QuantizeImage(5), obj);
+            break;
+        case 'Point Wise Transformation':
+            o = Object.assign(new PointWiseTransformation((x) => {
+                let [r, g, b, a] = x;
+                return [r, 0, 0, a]
+            }), obj);
+            break;
+        case 'Edge Detection':
+            o = Object.assign(new SobelFilter(), obj);
+            break;
+        case 'Invert Colors':
+            o = Object.assign(new Invert(), obj);
+            break;
+        case 'Gaussian Filter':
+            o = Object.assign(new Blur(), obj);
+            break;
+        case 'Texturize(triangle)':
+            o = Object.assign(new TexturizeTransformation("triangle.png", "triangle"), obj);
+            break;
+        case 'Texturize(waves)':
+            o = Object.assign(new TexturizeTransformation("waves.png", "waves"), obj);
+            break;
+        case 'Texturize(circles)':
+            o = Object.assign(new TexturizeTransformation("circle.png", "circles"), obj);
+            break;
+        case 'Texturize(spheres)':
+            o = Object.assign(new TexturizeTransformation("spheres2.png", "spheres"), obj);
+            break;
+        case 'Select':
+            o = Object.assign(new SelectTransformation(), obj);
+            break;
+        /*case 'Paint':
+            o = Object.assign(new PaintTransformation(), obj);
+            break;*/
+        default:
+            break;
+    }
+
+    if (o && obj["options"]) {
+        o.options = obj["options"].map((option: any) => JSONtoOption(option));
+    }
+    return o;
 }
