@@ -48,10 +48,10 @@ const transformations: [string, any][] = [
         let [r, g, b, a] = x;
         return [r, 0, 0, a]
     })],
-    ["Triangles", () => new TexturizeTransformation("triangle.png")],
-    ["Waves", () => new TexturizeTransformation("waves.png")],
-    ["Circles", () => new TexturizeTransformation("circle.png")],
-    ["Spheres", () => new TexturizeTransformation("spheres2.png")],
+    ["Triangles", () => new TexturizeTransformation("triangle.png", "triangles")],
+    ["Waves", () => new TexturizeTransformation("waves.png", "waves")],
+    ["Circles", () => new TexturizeTransformation("circle.png", "circles")],
+    ["Spheres", () => new TexturizeTransformation("spheres2.png", "spheres")],
     ["Select", () => new SelectTransformation()],
     ["Paint", (imageDimensions: [number, number]) => new PaintTransformation(imageDimensions[0], imageDimensions[1])]
 ]
