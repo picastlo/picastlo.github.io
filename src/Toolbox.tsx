@@ -107,7 +107,7 @@ const AddTransformation = ({imageDimensions, addTransform}: AddTransformationInt
                 <select value={selection} onChange={handleSelectionChange}>
                     {
                         transformations.map(
-                            (p, i) => <option value={i}>{p[0]}</option>
+                            (p, i) => <option key={i} value={i}>{p[0]}</option>
                         )
                     }
                 </select>
@@ -188,16 +188,21 @@ export const ToolBox =
             </SelectBox>
             {
                 pipeline.map((t, i) =>
-                    <>
+                    <div key = {i}>
                         <AddTransformation imageDimensions={dims} addTransform={(t) => { if(image) {addTransform(i, t); setDirty([!dirty, i])} }} />
                         <RemoveTransformation name={t.getName()} removeTransform={() => { removeTransform(i); setDirty([!dirty, i]) }} />
-                        <SelectBox selected={selected == i}>
+                        <SelectBox selected={selected === i}>
                             <TransformerCard imgRef={imgRef} transformation={t} onSelect={() => { setSelected(i) }} setDirty={() => setDirty([!dirty, i])} />
-                        </SelectBox> </>)
+                        </SelectBox> </div>)
             }
             <AddTransformation imageDimensions={dims} addTransform={(t) => { if(image) {addTransform(pipeline.length(), t); setDirty([!dirty, pipeline.length() - 1])} }} />
-            <SelectBox selected={selected==pipeline.length()-1}>
-                <ImageExporter onSelect={()=>setSelected(pipeline.length()-1)} image={pipeline.getOutputImage()}/>
+            <SelectBox selected={selected===pipeline.length()-1}>
+                <ImageExporter 
+                    onSelect={()=>setSelected(pipeline.length()-1)} 
+                    image={pipeline.getOutputImage()}
+                    pipeline={pipeline}
+                    onLoad={(selected:number) => {setDirty([!dirty, 0]); console.log("to the end."); setSelected(selected)}}
+                />
             </SelectBox>
           </div>
         )

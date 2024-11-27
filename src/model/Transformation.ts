@@ -57,9 +57,9 @@ export class TransformationPipeline {
         this.input = input
     }
     
-    setTransformations(transformationsString: string) {
-        const transformationsArray = convertJsonStringToArray(transformationsString) ?? [];    
-        const transformations: Transformation[] = transformationsArray.map(obj => JSONtoTransformation(obj));
+    setTransformations(pipelineString: string) {
+        const pipelineObj:any = convertJsonStringToArray(pipelineString) ?? [];    
+        const transformations: Transformation[] = pipelineObj.transformations.map((obj:any) => JSONtoTransformation(obj));
         this.transformations = transformations
     }
 
@@ -80,13 +80,23 @@ export class TransformationPipeline {
     }
 
     map = <t>(f: (value: Transformation, index: number) => t) => this.transformations.map<t>(f)
+
+    toJSON() {
+        const o = {transformations: this.transformations}
+        return JSON.stringify(o)
+    }
+
+    fromJSON(data:string) {
+        this.setTransformations(data)
+    }
 }
+
 const convertJsonStringToArray = (jsonString: string): Transformation[] | null => {
     try {
         return JSON.parse(jsonString) as Transformation[];
     } catch (error) {
         console.error("Error parsing JSON:", error);
-        return null;
+        throw new Error("Failed to load JSON")
     }
 };
 
@@ -746,19 +756,21 @@ export class PaintTransformation extends ImageLibTransformation {
     }
 }
 
+const sharpening_kernel = [
+    [0, -1, 0],
+    [-1, 5, -1],
+    [0, -1, 0],
+];
+
+const smooth_kernel = [
+    [1 / 9, 1 / 9, 1 / 9],
+    [1 / 9, 1 / 9, 1 / 9],
+    [1 / 9, 1 / 9, 1 / 9]
+];
+
+
 function JSONtoTransformation(obj: any): Transformation {
     const name = obj["name"]
-    const sharpening_kernel = [
-        [0, -1, 0],
-        [-1, 5, -1],
-        [0, -1, 0],
-    ];
-
-    const smooth_kernel = [
-        [1 / 9, 1 / 9, 1 / 9],
-        [1 / 9, 1 / 9, 1 / 9],
-        [1 / 9, 1 / 9, 1 / 9]
-    ];
 
     var o = null
     switch (name) {

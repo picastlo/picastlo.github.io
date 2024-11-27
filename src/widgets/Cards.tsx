@@ -96,7 +96,7 @@ const OptionsCard = ({ imgRef, transformation, setDirty }: { imgRef:React.Mutabl
     const trigger = () => { setDirty(); setDirty2(false) }
 
     return <div onBlur={trigger}>
-        {transformation.getOptions().map(o => <OptionCard imgRef={imgRef} option={o} transformation={transformation} setDirty={()=>setDirty2(true)} />)}
+        {transformation.getOptions().map((o,i) => <OptionCard key={i} imgRef={imgRef} option={o} transformation={transformation} setDirty={()=>setDirty2(true)} />)}
         {transformation.getOptions().length > 0 && <button disabled={!dirty2} onClick={trigger}>Apply</button>}
     </div>
 }

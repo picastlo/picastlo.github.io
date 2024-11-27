@@ -1,15 +1,25 @@
-import { useState } from "react";
 import { Foldable } from "./Utils";
-import { BlenderExporter, OBJExporter } from "./Exporters";
+import { PipelineExporter, OBJExporter, PipelineLoader } from "./Exporters";
 import { PicastLoImage } from "../model/Image";
+import { TransformationPipeline } from "../model/Transformation";
 
-const ImageExporter = ({ onSelect, image }: { onSelect: () => void, image:PicastLoImage|null }) => {
+interface ExportersInterface { 
+    onSelect: () => void, 
+    image:PicastLoImage|null,
+    pipeline:TransformationPipeline,
+    onLoad: (selected:number) => void
+}
+
+const ImageExporter = ({ onSelect, image, pipeline, onLoad }:ExportersInterface) => {
 
     return (
         <div className="widget-card" onClick={onSelect}>
             <Foldable title={`Final Image`}>
-                <OBJExporter outputImage={image} />
-                <BlenderExporter outputImage={image} />
+                <div><OBJExporter outputImage={image} /></div>
+                <div>
+                    <PipelineExporter pipeline={pipeline} />
+                    <PipelineLoader pipeline={pipeline} onLoad={onLoad}/>
+                </div>
             </Foldable>
         </div>
     )

@@ -19,7 +19,7 @@ const ImageLoader = ({ onSelect, setImage }: { onSelect: () => void, setImage: (
 
     return (
         <div className="widget-card" onClick={onSelect}>
-            <Foldable title={`Original Image ${filename==undefined?"":"("+filename+")"}`}>
+            <Foldable title={`Original Image ${filename===undefined?"":"("+filename+")"}`}>
                 <input type="file" accept="image/*" onChange={handleImageLoad} />
             </Foldable>
         </div>
