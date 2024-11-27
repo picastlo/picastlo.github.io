@@ -192,7 +192,7 @@ export const ToolBox =
                         <AddTransformation imageDimensions={dims} addTransform={(t) => { if(image) {addTransform(i, t); setDirty([!dirty, i])} }} />
                         <RemoveTransformation name={t.getName()} removeTransform={() => { removeTransform(i); setDirty([!dirty, i]) }} />
                         <SelectBox selected={selected === i}>
-                            <TransformerCard imgRef={imgRef} transformation={t} onSelect={() => { setSelected(i) }} setDirty={() => setDirty([!dirty, i])} />
+                            <TransformerCard imgRef={imgRef} transformation={t} onSelect={() => { setSelected(i) }} onLoad={() => setDirty([!dirty, i])} />
                         </SelectBox> </div>)
             }
             <AddTransformation imageDimensions={dims} addTransform={(t) => { if(image) {addTransform(pipeline.length(), t); setDirty([!dirty, pipeline.length() - 1])} }} />

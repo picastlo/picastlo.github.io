@@ -1,4 +1,4 @@
-import React, { useRef, useState, ReactNode, useEffect, MouseEvent, TouchEvent } from 'react'
+import React, { useState } from 'react'
 import Popup from 'reactjs-popup';
 
 import { Transformation, Option, ValueOption, OptionVisitor, ColorOption } from '../model/Transformation'
@@ -11,7 +11,7 @@ interface TransformerCardInterface {
     imgRef: React.MutableRefObject<HTMLImageElement>;
     transformation: Transformation;
     onSelect: () => void;
-    setDirty: () => void;
+    onLoad: () => void;
 }
 
 
@@ -79,33 +79,33 @@ const cardUserInterfaceGenerator: OptionVisitor<JSX.Element> = {
 
 
 
-const OptionCard = ({ imgRef, option, transformation, setDirty }: {imgRef:React.MutableRefObject<HTMLImageElement>, option: Option<any>, transformation: Transformation, setDirty: () => void }) => {
+const OptionCard = ({ imgRef, option, transformation, onLoad }: {imgRef:React.MutableRefObject<HTMLImageElement>, option: Option<any>, transformation: Transformation, onLoad: () => void }) => {
 
     const [value, setValue] = useState(option.accept(cardStateInitializer, null))
 
     return <div>
-        {option.accept(cardUserInterfaceGenerator, {'imgRef':imgRef, 'transformation':transformation, 'setDirty':setDirty, 'state':value, 'setState':setValue})}
+        {option.accept(cardUserInterfaceGenerator, {'imgRef':imgRef, 'transformation':transformation, 'onLoad':onLoad, 'state':value, 'setState':setValue})}
     </div>
 }
 
 
-const OptionsCard = ({ imgRef, transformation, setDirty }: { imgRef:React.MutableRefObject<HTMLImageElement>, transformation: Transformation, setDirty: () => void }) => {
+const OptionsCard = ({ imgRef, transformation, onLoad }: { imgRef:React.MutableRefObject<HTMLImageElement>, transformation: Transformation, onLoad: () => void }) => {
 
     const [dirty2,setDirty2] = useState(false)
 
-    const trigger = () => { setDirty(); setDirty2(false) }
+    const trigger = () => { onLoad(); setDirty2(false) }
 
     return <div onBlur={trigger}>
-        {transformation.getOptions().map((o,i) => <OptionCard key={i} imgRef={imgRef} option={o} transformation={transformation} setDirty={()=>setDirty2(true)} />)}
+        {transformation.getOptions().map((o,i) => <OptionCard key={i} imgRef={imgRef} option={o} transformation={transformation} onLoad={()=>setDirty2(true)} />)}
         {transformation.getOptions().length > 0 && <button disabled={!dirty2} onClick={trigger}>Apply</button>}
     </div>
 }
 
 
-export const TransformerCard = ({ imgRef, transformation, onSelect, setDirty }: TransformerCardInterface) =>
+export const TransformerCard = ({ imgRef, transformation, onSelect, onLoad }: TransformerCardInterface) =>
     <div className="widget-card" onClick={onSelect}>
          <Foldable title={transformation.getName()}>
-            <OptionsCard imgRef={imgRef} transformation={transformation} setDirty={setDirty}></OptionsCard>
+            <OptionsCard imgRef={imgRef} transformation={transformation} onLoad={onLoad}></OptionsCard>
         </Foldable>
     </div>
 
