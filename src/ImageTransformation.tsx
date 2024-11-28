@@ -11,8 +11,7 @@ const App: React.FC = () => {
   const pipeline = initialPipeline
   const [tick, setTick] = useState(0)
   const [image, setImage] = useState<string | null>(null);
-  const [selected, setSelected] = useState(-1)
-
+  const [selected, setSelected] = useState(pipeline.length()-1)
 
   const addTransform = (index:number, transform:Transformation) => {
     pipeline.insertTransformation(index, transform)
@@ -21,8 +20,8 @@ const App: React.FC = () => {
 
   const removeTransform = (index:number) => {
     pipeline.removeTransformation(index)
-    if(pipeline.length() == 0) setSelected(-1)
-    else if(pipeline.length() == index ) setSelected(pipeline.length()-1)
+    if(pipeline.length() === 0) setSelected(-1)
+    else if(pipeline.length() === index ) setSelected(pipeline.length()-1)
     setTick(() => tick+1) // Just because we are using objects in the pipeline that do not change
   }
 
@@ -59,7 +58,7 @@ const App: React.FC = () => {
         <div ref={toolbarRef} className="toolbox">
           <h1 >PicaSTLo</h1>
           <div className='transformations'>
-              <ToolBox imgRef={imgRef} pipeline={pipeline} image={image} setImage={setImage} addTransform={addTransform} removeTransform={removeTransform} selected={selected} setSelected={setSelected}/>
+              <ToolBox imgRef={imgRef} pipeline={pipeline} image={image} setImage={setImage} addTransform={addTransform} removeTransform={removeTransform} selected={selected} setSelected={(n) => {setSelected(n)}}/>
               <div ref={licRef} className='license'>
                 <a href='https://picastlo.github.io/'>Picastlo</a> © 2024 by <a href='https://github.com/picastlo/'>Christophe Scholliers, João Costa Seco, Eduardo Geraldo</a> is licensed under <a href='https://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1'>CC BY-SA 4.0</a>
               </div>

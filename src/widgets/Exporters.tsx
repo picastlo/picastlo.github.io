@@ -103,6 +103,6 @@ export const PipelineLoader = ({pipeline, onLoad}:PipelineLoaderInterface) => {
     return <>
             <button className="button button-dark" onClick={clickButton}>Load</button>
             <input ref={inputRef} style={{display:"none"}} accept=".json" type="file" onChange={loadFile}/>
-            {error && <p style={{color:'red'}}>{error}<span onClick={()=>setError(null)}>x</span></p>}
+            {error && <p style={{color:'red'}}>{error}<span style={{ cursor: 'grab', height:'0px', position:'relative',top:'0px',left:'300px'}} onClick={()=>setError(null)}>x</span></p>}
            </>
 }

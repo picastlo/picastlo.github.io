@@ -182,8 +182,8 @@ export const ToolBox =
 
 
         return (
-          <div className="toolbox-container">
-          <SelectBox selected={selected == -1}>
+            <div className="toolbox-container">
+            <SelectBox selected={selected == -1}>
                 <ImageLoader onSelect={() => setSelected(-1)} setImage={setImageAndPipeline} />
             </SelectBox>
             {
@@ -192,7 +192,7 @@ export const ToolBox =
                         <AddTransformation imageDimensions={dims} addTransform={(t) => { if(image) {addTransform(i, t); setDirty([!dirty, i])} }} />
                         <RemoveTransformation name={t.getName()} removeTransform={() => { removeTransform(i); setDirty([!dirty, i]) }} />
                         <SelectBox selected={selected === i}>
-                            <TransformerCard imgRef={imgRef} transformation={t} onSelect={() => { setSelected(i) }} onLoad={() => setDirty([!dirty, i])} />
+                            <TransformerCard imgRef={imgRef} transformation={t} onSelect={() => {setSelected(i)}} onLoad={() => setDirty([!dirty, i])} />
                         </SelectBox> </div>)
             }
             <AddTransformation imageDimensions={dims} addTransform={(t) => { if(image) {addTransform(pipeline.length(), t); setDirty([!dirty, pipeline.length() - 1])} }} />
@@ -201,7 +201,7 @@ export const ToolBox =
                     onSelect={()=>setSelected(pipeline.length()-1)} 
                     image={pipeline.getOutputImage()}
                     pipeline={pipeline}
-                    onLoad={(selected:number) => {setDirty([!dirty, 0]); console.log("to the end."); setSelected(selected)}}
+                    onLoad={(selected:number) => {setDirty([!dirty, 0]); console.log(selected); setSelected(selected)}}
                 />
             </SelectBox>
           </div>

@@ -10,7 +10,7 @@ interface ExportersInterface {
     onLoad: (selected:number) => void
 }
 
-const ImageExporter = ({ onSelect, image, pipeline, onLoad }:ExportersInterface) => {
+const ImageTools = ({ onSelect, image, pipeline, onLoad }:ExportersInterface) => {
 
     return (
         <div className="widget-card" onClick={onSelect}>
@@ -25,4 +25,4 @@ const ImageExporter = ({ onSelect, image, pipeline, onLoad }:ExportersInterface)
     )
 }
 
-export default ImageExporter
+export default ImageTools

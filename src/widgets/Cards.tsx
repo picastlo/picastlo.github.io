@@ -37,7 +37,7 @@ const cardUserInterfaceGenerator: OptionVisitor<JSX.Element> = {
             const value = parseInt(event.target.value)
             extra.transformation.setOption(option.name, value)
             extra.setState(value)
-            extra.setDirty()
+            extra.onLoad()
         }
 
         return <>
@@ -53,7 +53,7 @@ const cardUserInterfaceGenerator: OptionVisitor<JSX.Element> = {
         const updateValue = (event: React.ChangeEvent<HTMLInputElement>) => {
             extra.transformation.setOption(option.name, toRGBColor(event.target.value))
             extra.setState(event.target.value)
-            extra.setDirty()
+            extra.onLoad()
         }
 
         return <>
@@ -65,7 +65,7 @@ const cardUserInterfaceGenerator: OptionVisitor<JSX.Element> = {
         const updateValue = (value:ImageData) => {
             extra.transformation.setOption(option.name, value)
             extra.setState(value)
-            extra.setDirty()
+            extra.onLoad()
         }
 
         return <><Popup trigger={<button>Toggle Mask Editor</button>} position="right center">
